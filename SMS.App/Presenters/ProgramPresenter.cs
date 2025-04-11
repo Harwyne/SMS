@@ -27,8 +27,19 @@ namespace SMS.App.Presenters
             _programView.ReadEvent += ReadEvent;
             _programView.UpdateEvent += UpdateEvent;
             _programView.DeleteEvent += DeleteEvent;
+            _programView.GetInfoEvent += GetInfoEvent;
+
             LoadProgramList();
             _programView.GetProgramList(_bindingSource);
+        }
+
+        private void GetInfoEvent(object? sender, EventArgs e)
+        {
+            var entity = (Programs)_bindingSource.Current;
+
+            _programView.ProgramId = entity.ProgramId;
+            _programView.ProgramName = entity.ProgramName;
+            _programView.Description = entity.Description;
         }
 
         private void LoadProgramList(string? search = null)
@@ -47,12 +58,20 @@ namespace SMS.App.Presenters
 
         private void DeleteEvent(object? sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            var entity = (Programs)_bindingSource.Current;
         }
 
         private void UpdateEvent(object? sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            var editProgram = _dbContext.Programs.Find(_programView.ProgramId);
+            editProgram.ProgramName = _programView.ProgramName;
+            editProgram.Description = _programView.Description;
+
+            _dbContext.Programs.Update(editProgram);
+            _dbContext.SaveChanges();
+
+            _programView.SetMessage("Program Updated Successfully");
+            LoadProgramList();
         }
 
         private void ReadEvent(object? sender, EventArgs e)
