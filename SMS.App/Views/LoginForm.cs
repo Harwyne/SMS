@@ -30,6 +30,7 @@ namespace SMS.App.Views
         {
             MessageBox.Show(message);
         }
+       
 
         public event EventHandler LoginEvent;
     }
